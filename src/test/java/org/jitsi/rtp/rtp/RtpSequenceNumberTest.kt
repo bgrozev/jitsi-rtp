@@ -16,75 +16,23 @@
 
 package org.jitsi.rtp.rtp
 
-import io.kotlintest.IsolationMode
-import io.kotlintest.matchers.sequences.shouldContainInOrder
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.ShouldSpec
 
 class RtpSequenceNumberTest : ShouldSpec() {
-    override fun isolationMode(): IsolationMode? = IsolationMode.InstancePerLeaf
 
     init {
-        "rollover" {
-            var num = RtpSequenceNumber(65535)
-            "via increment" {
-                should("work correctly") {
-                    num++
-                    num shouldBe RtpSequenceNumber(0)
-                }
-            }
-            "via plus" {
-                should("work correctly") {
-                    (num + 1) shouldBe RtpSequenceNumber(0)
-                }
-            }
-        }
-        "reverse rollover" {
-            var num = RtpSequenceNumber(0)
-            "via decrement" {
-                should("work correctly") {
-                    num--
-                    num shouldBe RtpSequenceNumber(65535)
-                }
-            }
-            "via minus" {
-                should("work correctly") {
-                    (num - 1) shouldBe RtpSequenceNumber(65535)
-                }
-            }
-        }
-        "comparison" {
-            should("work correctly") {
-                (RtpSequenceNumber(1) < RtpSequenceNumber(2)) shouldBe true
-                (RtpSequenceNumber(1) <= RtpSequenceNumber(2)) shouldBe true
-                (RtpSequenceNumber(1) <= RtpSequenceNumber(1)) shouldBe true
-                (RtpSequenceNumber(1) == RtpSequenceNumber(1)) shouldBe true
-                (RtpSequenceNumber(1) < RtpSequenceNumber(0)) shouldBe false
-                (RtpSequenceNumber(65534) < RtpSequenceNumber(0)) shouldBe true
-                (RtpSequenceNumber(32768) < RtpSequenceNumber(0)) shouldBe false
-                (RtpSequenceNumber(32769) < RtpSequenceNumber(0)) shouldBe true
-            }
-        }
-        "rangeTo" {
-            should("work correctly") {
-                (RtpSequenceNumber(65533)..RtpSequenceNumber(2)).asSequence().shouldContainInOrder(
-                    RtpSequenceNumber(65533),
-                    RtpSequenceNumber(65534),
-                    RtpSequenceNumber(65535),
-                    RtpSequenceNumber(0),
-                    RtpSequenceNumber(1),
-                    RtpSequenceNumber(2)
-                )
+        var n1  = RtpSequenceNumber(65535)
+        ++n1
+        System.err.println("n1=$n1")
 
-                (RtpSequenceNumber(2) downTo RtpSequenceNumber(65533)).asSequence().shouldContainInOrder(
-                    RtpSequenceNumber(2),
-                    RtpSequenceNumber(1),
-                    RtpSequenceNumber(0),
-                    RtpSequenceNumber(65535),
-                    RtpSequenceNumber(65534),
-                    RtpSequenceNumber(65533)
-                )
-            }
+        var n2 = RtpSequenceNumber(65535)
+        n2++
+        System.err.println("n2=$n2")
+
+        var n3 = RtpSequenceNumber(65535)
+        should("work correctly") {
+            ++n3
+            System.err.println("num=$n3")
         }
     }
 }
